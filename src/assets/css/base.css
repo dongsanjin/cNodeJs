@@ -1,10 +1,12 @@
 html, body {
   font-size: 50px;
   font-family: "Helvetica Neue","Luxi Sans","DejaVu Sans",Tahoma,"Hiragino Sans GB",STHeiti,sans-serif!important;
-  color: #333
+  color: #333;
+  background-color: #e1e1e1
 }
 ul, li {
   margin: 0;
   padding: 0;
   list-style-type: none;
 }
+img {max-width: 100%;}
