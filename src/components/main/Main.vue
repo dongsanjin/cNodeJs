@@ -27,4 +27,5 @@ export default {
     max-width 1400px
     min-width 968px
     margin 0 auto
+    display flex
 </style>
