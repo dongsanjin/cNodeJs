@@ -9,7 +9,7 @@
       <li class="post-nav-item">客户端测试</li>
     </ul>
     <ul class="post-all">
-      <li class="post-item" v-for="list of postList" :key="list.author_id">
+      <li class="post-item" v-for="(list, index) of postList" :key="index">
         <a href="#" class="user-avatar-box"><img class="user-avatar" :src="list.author.avatar_url"></a>
         <div class="post-statistics">
           <span class="reply-num">{{list.reply_count}}</span><span class="spacing">/</span><span class="watch-num">{{list.visit_count}}</span>
@@ -24,13 +24,12 @@
         </a>
       </li>
     </ul>
-    <!-- <div class="block">
-      <span class="demonstration">大于 7 页时的效果</span>
+    <div class="block">
       <el-pagination
         layout="prev, pager, next"
-        :total="1000">
+        :total="67">
       </el-pagination>
-    </div> -->
+    </div>
   </div>
 </template>
 <script>
@@ -52,8 +51,6 @@ export default {
       if(data.success === true){
         this.postList = res.data.data
       }
-      //eslint-disable-next-line
-      console.log(this.postList)
     }
   },
   mounted () {
@@ -85,6 +82,7 @@ export default {
   .post-all
     overflow hidden
     .post-item
+      display flex
       overflow hidden
       height 1rem
       line-height 1rem
@@ -94,13 +92,13 @@ export default {
       box-sizing border-box
       border-top 1px solid #f0f0f0
       margin-top -1px
+      .user-avatar-box,
       .user-avatar,
       .reply-user-avatar
         display inline-block
         width .6rem
         vertical-align middle
-      .post-statistics,
-      .post-info
+      .post-statistics
         display inline-block
       .post-statistics
         width 1.6rem
@@ -113,14 +111,16 @@ export default {
         .spacing
           margin 0 .04rem
       .post-info
-        font-size .32rem
+        flex 1
+        overflow hidden
+        text-overflow ellipsis
+        white-space nowrap
         .post-type
-          padding .04rem .08rem
+          padding 0.04rem 0.08rem
           margin-right .1rem
           border-radius .06rem
           font-size .24rem
           text-align center
-          box-sizing border-box
           color #999
           background-color #e5e5e5
         .postTop
