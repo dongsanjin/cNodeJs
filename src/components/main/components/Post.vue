@@ -24,15 +24,12 @@
         </a>
       </li>
     </ul>
-    <div class="block">
-      <el-pagination
-        layout="prev, pager, next"
-        :total="67">
-      </el-pagination>
-    </div>
+    <pagination></pagination>
   </div>
 </template>
 <script>
+import Pagination from "./Pagination"
+
 const axios = require('axios')
 export default {
   name: "Post",
@@ -40,6 +37,9 @@ export default {
     return {
       postList: [],
     }
+  },
+  components: {
+    Pagination
   },
   methods: {
     handlePostAxios () {
@@ -55,15 +55,12 @@ export default {
   },
   watch: {
     postList () {
-      /* eslint-disable */
       const nowTime = Date.now()
-      console.log(this.postList)
       this.postList.forEach(list => {
         //将最后回复时间转化为时间戳
         const lastTime = Date.parse(list.last_reply_at)
         //将当前时间戳与最后回复时间戳相减并转化为小时
         list.last_reply_at = Math.floor((nowTime - lastTime) / 1000 / 3600)
-        console.log(list.last_reply_at)
         if (list.last_reply_at < 24) {
           list.last_reply_at = list.last_reply_at + "小时前"
         } else if (list.last_reply_at > 24){
@@ -81,6 +78,8 @@ export default {
 </script>
 <style lang="stylus" scoped>
 .wrapper
+  background-color #fff
+  overflow hidden
   flex 1
   .post-nav
     height .88rem
@@ -104,7 +103,6 @@ export default {
       overflow hidden
       height 1rem
       line-height 1rem
-      background-color #fff
       font-size .28rem
       padding 0 .2rem
       box-sizing border-box
