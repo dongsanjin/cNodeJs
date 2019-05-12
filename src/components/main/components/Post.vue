@@ -20,7 +20,7 @@
         </div>
         <a href="#" class="reply-user">
           <img class="reply-user-avatar" src="https://avatars3.githubusercontent.com/u/25699654?v=4&s=120">
-          <span class="comment-time">2 天前</span>
+          <span class="comment-time">{{list.last_reply_at}}</span>
         </a>
       </li>
     </ul>
@@ -38,7 +38,7 @@ export default {
   name: "Post",
   data () {
     return {
-      postList: []
+      postList: [],
     }
   },
   methods: {
@@ -53,11 +53,29 @@ export default {
       }
     }
   },
+  watch: {
+    postList () {
+      /* eslint-disable */
+      const nowTime = Date.now()
+      console.log(this.postList)
+      this.postList.forEach(list => {
+        //将最后回复时间转化为时间戳
+        const lastTime = Date.parse(list.last_reply_at)
+        //将当前时间戳与最后回复时间戳相减并转化为小时
+        list.last_reply_at = Math.floor((nowTime - lastTime) / 1000 / 3600)
+        console.log(list.last_reply_at)
+        if (list.last_reply_at < 24) {
+          list.last_reply_at = list.last_reply_at + "小时前"
+        } else if (list.last_reply_at > 24){
+          list.last_reply_at = Math.ceil(list.last_reply_at / 24) + "天前"
+        } else if (list.last_reply_at > 720){
+          list.last_reply_at = Math.ceil(list.last_reply_at / 24 / 30) + "个月前"
+        }
+      })
+    }
+  },
   mounted () {
     this.handlePostAxios()
-  },
-  watch: {
-
   }
 }
 </script>
