@@ -5,7 +5,7 @@
         <span @click="setMinCurrentPage">&lt;&lt;</span>
       </li>
       <li class="page" v-for="(list, index) of pageList" :key="index">
-        <span :class="{pageActive: list === currentPage}" @click="select(list)">{{list}}</span>
+        <span :class="{pageActive: list === childCurrentPage}" @click="select(list)">{{list}}</span>
       </li>
       <li class="page next">
         <span @click="setMaxCurrentPage">&gt;&gt;</span>
@@ -14,12 +14,12 @@
   </div>  
 </template>
 <script>
-/* eslint-disable */ 
+/* eslint-disable */
 export default {
   name: "Pagination",
   data () {
     return {
-      currentPage: 1,
+      childCurrentPage: 1,
       totalPages: 67
     }
   },
@@ -27,20 +27,26 @@ export default {
     select (list) {
       if (list === this.currentPage) return
       if (typeof list === 'string') return
-      this.currentPage = list
+      this.$emit("changePage", this.childCurrentPage + 1)
+      this.childCurrentPage = list
+      console.log("点击了")
     },
     setMinCurrentPage () {
-      this.currentPage = 1
+      this.$emit("changePage", this.childCurrentPage)
+      this.childCurrentPage = 1
+      console.log("点击了")
     },
     setMaxCurrentPage () {
-      this.currentPage = this.totalPages
+      this.$emit("changePage", this.childCurrentPage)
+      this.childCurrentPage = this.totalPages
+      console.log("点击了")
     }
   },
   computed: {
     pageList () {
-      const c = this.currentPage
+      const c = this.childCurrentPage
       if (c < 4) {
-        return [c, c + 1, c + 2, c + 3, c + 4, "..."]
+        return [1,  2,  3,  4, 5, "..."]
       }else if(c >= 4 && c < 65) {
         return ["...",c - 2, c - 1, c, c + 1, c + 2, "..."]
       }else if(c === 65){

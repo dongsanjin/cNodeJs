@@ -24,56 +24,15 @@
         </a>
       </li>
     </ul>
-    <pagination></pagination>
-    <!-- <pagination-test></pagination-test> -->
+    <slot></slot>
   </div>
 </template>
 <script>
-import Pagination from "./Pagination"
 
-const axios = require('axios')
 export default {
   name: "Post",
-  data () {
-    return {
-      postList: [],
-    }
-  },
-  components: {
-    Pagination
-  },
-  methods: {
-    handlePostAxios () {
-      axios.get("https://cnodejs.org/api/v1/topics")
-        .then(this.getPostInfo)
-    },
-    getPostInfo (res) {
-      const data = res.data
-      if(data.success === true){
-        this.postList = res.data.data
-      }
-    }
-  },
-  watch: {
-    postList () {
-      const nowTime = Date.now()
-      this.postList.forEach(list => {
-        //将最后回复时间转化为时间戳
-        const lastTime = Date.parse(list.last_reply_at)
-        //将当前时间戳与最后回复时间戳相减并转化为小时
-        list.last_reply_at = Math.floor((nowTime - lastTime) / 1000 / 3600)
-        if (list.last_reply_at < 24) {
-          list.last_reply_at = list.last_reply_at + "小时前"
-        } else if (list.last_reply_at >= 24){
-          list.last_reply_at = Math.ceil(list.last_reply_at / 24) + "天前"
-        } else if (list.last_reply_at > 720){
-          list.last_reply_at = Math.ceil(list.last_reply_at / 24 / 30) + "个月前"
-        }
-      })
-    }
-  },
-  mounted () {
-    this.handlePostAxios()
+  props: {
+    postList: Array
   }
 }
 </script>
