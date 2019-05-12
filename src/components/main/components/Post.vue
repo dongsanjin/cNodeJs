@@ -64,7 +64,7 @@ export default {
         list.last_reply_at = Math.floor((nowTime - lastTime) / 1000 / 3600)
         if (list.last_reply_at < 24) {
           list.last_reply_at = list.last_reply_at + "小时前"
-        } else if (list.last_reply_at > 24){
+        } else if (list.last_reply_at >= 24){
           list.last_reply_at = Math.ceil(list.last_reply_at / 24) + "天前"
         } else if (list.last_reply_at > 720){
           list.last_reply_at = Math.ceil(list.last_reply_at / 24 / 30) + "个月前"
