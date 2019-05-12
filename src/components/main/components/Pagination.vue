@@ -2,26 +2,53 @@
   <div class="pageContainer">
     <ul class="pageInner">
       <li class="page prev">
-        <a href="#">&lt;&lt;</a>
+        <span @click="setMinCurrentPage">&lt;&lt;</span>
       </li>
-      <li class="page" v-for="list of pages.pageList" :key="list">
-        <a href="#" :class="{pageActive:list == 1 ? true : false}">{{list}}</a>
+      <li class="page" v-for="(list, index) of pageList" :key="index">
+        <span :class="{pageActive: list === currentPage}" @click="select(list)">{{list}}</span>
       </li>
       <li class="page next">
-        <a href="#">&gt;&gt;</a>
+        <span @click="setMaxCurrentPage">&gt;&gt;</span>
       </li>
     </ul>
   </div>  
 </template>
 <script>
+/* eslint-disable */ 
 export default {
   name: "Pagination",
   data () {
     return {
-      pages: {
-        pageList: [1,2,3,4,5,"..."],
-        talodPage: 10,
-        showPage: 5
+      currentPage: 1,
+      totalPages: 67
+    }
+  },
+  methods: {
+    select (list) {
+      if (list === this.currentPage) return
+      if (typeof list === 'string') return
+      this.currentPage = list
+    },
+    setMinCurrentPage () {
+      this.currentPage = 1
+    },
+    setMaxCurrentPage () {
+      this.currentPage = this.totalPages
+    }
+  },
+  computed: {
+    pageList () {
+      const c = this.currentPage
+      if (c < 4) {
+        return [c, c + 1, c + 2, c + 3, c + 4, "..."]
+      }else if(c >= 4 && c < 65) {
+        return ["...",c - 2, c - 1, c, c + 1, c + 2, "..."]
+      }else if(c === 65){
+        return ["...",c - 2, c - 1, c, c + 1, c + 2]
+      }else if(c === 66){
+        return ["...",c - 2, c - 1, c, c + 1]
+      }else if(c === 67){
+        return ["...",c - 2, c - 1, c]
       }
     }
   }
@@ -38,6 +65,7 @@ export default {
       padding .16rem .24rem
       border 1px solid #ddd
       border-left-width 0
+      cursor pointer
     .prev,
     .next
       letter-spacing -.1rem

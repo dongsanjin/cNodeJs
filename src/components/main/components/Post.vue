@@ -25,6 +25,7 @@
       </li>
     </ul>
     <pagination></pagination>
+    <!-- <pagination-test></pagination-test> -->
   </div>
 </template>
 <script>
