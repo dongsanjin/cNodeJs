@@ -20,26 +20,27 @@
         </div>
         <a href="#" class="reply-user">
           <img class="reply-user-avatar" src="https://avatars3.githubusercontent.com/u/25699654?v=4&s=120">
-          <span class="comment-time">2 天前</span>
+          <span class="comment-time">{{list.last_reply_at}}</span>
         </a>
       </li>
     </ul>
-    <div class="block">
-      <el-pagination
-        layout="prev, pager, next"
-        :total="67">
-      </el-pagination>
-    </div>
+    <pagination></pagination>
+    <!-- <pagination-test></pagination-test> -->
   </div>
 </template>
 <script>
+import Pagination from "./Pagination"
+
 const axios = require('axios')
 export default {
   name: "Post",
   data () {
     return {
-      postList: []
+      postList: [],
     }
+  },
+  components: {
+    Pagination
   },
   methods: {
     handlePostAxios () {
@@ -53,16 +54,33 @@ export default {
       }
     }
   },
+  watch: {
+    postList () {
+      const nowTime = Date.now()
+      this.postList.forEach(list => {
+        //将最后回复时间转化为时间戳
+        const lastTime = Date.parse(list.last_reply_at)
+        //将当前时间戳与最后回复时间戳相减并转化为小时
+        list.last_reply_at = Math.floor((nowTime - lastTime) / 1000 / 3600)
+        if (list.last_reply_at < 24) {
+          list.last_reply_at = list.last_reply_at + "小时前"
+        } else if (list.last_reply_at > 24){
+          list.last_reply_at = Math.ceil(list.last_reply_at / 24) + "天前"
+        } else if (list.last_reply_at > 720){
+          list.last_reply_at = Math.ceil(list.last_reply_at / 24 / 30) + "个月前"
+        }
+      })
+    }
+  },
   mounted () {
     this.handlePostAxios()
-  },
-  watch: {
-
   }
 }
 </script>
 <style lang="stylus" scoped>
 .wrapper
+  background-color #fff
+  overflow hidden
   flex 1
   .post-nav
     height .88rem
@@ -86,7 +104,6 @@ export default {
       overflow hidden
       height 1rem
       line-height 1rem
-      background-color #fff
       font-size .28rem
       padding 0 .2rem
       box-sizing border-box
