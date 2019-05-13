@@ -1,8 +1,8 @@
 <template>
   <div class="main-outer">
     <div class="main-inner">
-      <post :postList="postList">
-        <pagination @changePage="changePage"></pagination>
+      <post :postList="postList" @clickTab="clickTab">
+        <pagination @chickPage="chickPage"></pagination>
       </post>
       <sidebar></sidebar>
     </div>
@@ -12,6 +12,8 @@
 import Post from './components/Post'
 import Sidebar from './components/Sidebar'
 import Pagination from './components/Pagination'
+import { mapActions } from 'vuex'
+import changeUrl from 'assets/js/urlPath'
 
 const axios = require('axios')
 export default {
@@ -23,33 +25,53 @@ export default {
   },
   data () {
     return {
-      currentPage: 1,
-      postList: []
+      postList: [],
+      currentPage: this.$store.state.params.page,
+      params: {}
     }
   },
   methods: {
     //发送get请求
     handlePostAxios () {
-      axios.get("https://cnodejs.org/api/v1/topics",{
-        params: {
-          page: this.currentPage
-        }
+      // changeUrl(this.params)
+      this.params = {
+        tab: this.$store.state.params.tab,
+        page: this.$store.state.params.page
+      }
+      console.log(this.params)
+      axios.get("https://cnodejs.org/api/v1/topics",
+        {
+          tab: this.$store.state.params.tab,
+          page: this.$store.state.params.page
       })
       .then(this.getPostInfo)
+      .catch(this.getError())
     },
     getPostInfo (res) {
       const data = res.data
       if(data.success === true){
         this.postList = res.data.data
       }
+      console.log(this.$store.state.params.tab)
     },
-    changePage (childCurrentPage) {
-      this.currentPage = childCurrentPage
+    getError () {
+      console.log("没有发送请求")
+    },
+    chickPage (childCurrentPage) {
+      this.$store.state.params.page = childCurrentPage
       /* eslint-disable */
-      console.log("接收到了值")
-      console.log(this.currentPage)
+      this.changePage(childCurrentPage)
       this.handlePostAxios()
-    }
+    },
+    clickTab (tab) {
+      this.changeTab(tab)
+      this.changePage("")
+      this.handlePostAxios()
+    },
+    ...mapActions([
+      'changePage',
+      'changeTab'
+    ])
   },
   //监听postList将数据中的时间格式进行转换
   watch: {
@@ -57,13 +79,18 @@ export default {
       const nowTime = Date.now()
       this.postList.forEach(list => {
         const lastTime = Date.parse(list.last_reply_at)
-        list.last_reply_at = Math.floor((nowTime - lastTime) / 1000 / 3600)
-        if (list.last_reply_at < 24) {
-          list.last_reply_at = list.last_reply_at + "小时前"
-        } else if (list.last_reply_at >= 24){
-          list.last_reply_at = Math.ceil(list.last_reply_at / 24) + "天前"
-        } else if (list.last_reply_at > 720){
-          list.last_reply_at = Math.ceil(list.last_reply_at / 24 / 30) + "个月前"
+        list.last_reply_at = Math.ceil((nowTime - lastTime) / 1000 / 60)
+        if (list.last_reply_at < 60){
+          list.last_reply_at = list.last_reply_at + "分钟前"
+        }else if (list.last_reply_at > 60){
+          list.last_reply_at = Math.floor((nowTime - lastTime) / 1000 / 3600)
+          if (list.last_reply_at < 24) {
+            list.last_reply_at = list.last_reply_at + "小时前"
+          } else if (list.last_reply_at >= 24){
+            list.last_reply_at = Math.floor(list.last_reply_at / 24) + "天前"
+          } else if (list.last_reply_at > 720){
+            list.last_reply_at = Math.floor(list.last_reply_at / 24 / 30) + "个月前"
+          }
         }
       })
     }

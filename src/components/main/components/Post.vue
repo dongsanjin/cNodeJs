@@ -1,13 +1,8 @@
 <template>
   <div class="wrapper">
-    <ul class="post-nav">
-      <li class="post-nav-item post-nav-item-active">全部</li>
-      <li class="post-nav-item">精华</li>
-      <li class="post-nav-item">分享</li>
-      <li class="post-nav-item">问答</li>
-      <li class="post-nav-item">招聘</li>
-      <li class="post-nav-item">客户端测试</li>
-    </ul>
+    <div class="post-nav">
+      <span class="post-nav-item" :class="{postNavItemActive: list === currentTab, hover: list !== currentTab}" v-for="(list, index) in tabList" :key="index" @click="select(list)">{{list}}</span>
+    </div>
     <ul class="post-all">
       <li class="post-item" v-for="(list, index) of postList" :key="index">
         <a href="#" class="user-avatar-box"><img class="user-avatar" :src="list.author.avatar_url"></a>
@@ -15,11 +10,12 @@
           <span class="reply-num">{{list.reply_count}}</span><span class="spacing">/</span><span class="watch-num">{{list.visit_count}}</span>
         </div>
         <div class="post-info">
-          <span class="post-type" :class="{postTop: list.top}">{{list.top == true ? "置顶" : list.tab == "share" ? "分享" : "问答"}}</span>
+          <span class="post-type" :class="{postTop: list.top || list.good === true}" v-if="currentTabStr == 'all' || list.good == true ? true : list. top || list.good ? true : false">{{list.top == true ? "置顶" : list.good == true ? "精华" : list.tab == "share" ? "分享" : "问答"}}</span>
+          <!-- <span class="post-type" :class="{postTop: list.top || list.good === true}" v-else-if="list.tab === 'all' || list.good : true ? true : list.top || list.good ? true : false">{{list.top == true ? "置顶" : list.good == true ? "精华" : list.tab == "share" ? "分享" : "问答"}}</span> -->
           <a href="#" class="post-title">{{list.title}}</a>
         </div>
         <a href="#" class="reply-user">
-          <img class="reply-user-avatar" src="https://avatars3.githubusercontent.com/u/25699654?v=4&s=120">
+          <!-- <img class="reply-user-avatar" src="https://avatars3.githubusercontent.com/u/25699654?v=4&s=120"> -->
           <span class="comment-time">{{list.last_reply_at}}</span>
         </a>
       </li>
@@ -33,6 +29,42 @@ export default {
   name: "Post",
   props: {
     postList: Array
+  },
+  data () {
+    return {
+      tabList: ["全部","精华","分享","问答","招聘","客户端测试"],
+      currentTab: "全部"
+    }
+  },
+  computed: {
+    currentTabStr () {
+      return this.$store.state.params.tab
+    }
+  },
+  methods: {
+    select (list) {
+      this.currentTab = list
+      switch(list) {
+        case "全部":
+          this.$emit("clickTab","all")
+          break
+        case "精华":
+          this.$emit("clickTab","good")
+          break
+        case "分享":
+          this.$emit("clickTab","share")
+          break
+        case "问答":
+          this.$emit("clickTab","ask")
+          break
+        case "招聘":
+          this.$emit("clickTab","job")
+          break
+        case "客户端测试":
+          this.$emit("clickTab","dev")
+          break
+      }
+    }
   }
 }
 </script>
@@ -53,7 +85,12 @@ export default {
       box-sizing border-box
       border-radius .06rem
       color #80bd01
-    .post-nav-item-active
+      cursor pointer
+      &:active
+        text-decoration: underline
+    .hover
+      color #000
+    .postNavItemActive
       background-color #80bd01
       color #fff
   .post-all
@@ -104,10 +141,6 @@ export default {
           background-color #80bd01
         .post-title
           color #000
-          &:hover
-            text-decoration underline
-          &:visited
-            color #888
       .reply-user
         float right
         .reply-user-avatar

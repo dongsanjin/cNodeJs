@@ -2,19 +2,18 @@
   <div class="pageContainer">
     <ul class="pageInner">
       <li class="page prev">
-        <span @click="setMinCurrentPage">&lt;&lt;</span>
+        <span  @click="setMinCurrentPage">&lt;&lt;</span>
       </li>
       <li class="page" v-for="(list, index) of pageList" :key="index">
-        <span :class="{pageActive: list === childCurrentPage}" @click="select(list)">{{list}}</span>
+        <span  :class="{pageActive: list === childCurrentPage, disable: typeof list === 'string'}" :disable="typeof list === 'string'" @click="select(list)">{{list}}</span>
       </li>
       <li class="page next">
-        <span @click="setMaxCurrentPage">&gt;&gt;</span>
+        <span  @click="setMaxCurrentPage">&gt;&gt;</span>
       </li>
     </ul>
-  </div>  
+  </div>
 </template>
 <script>
-/* eslint-disable */
 export default {
   name: "Pagination",
   data () {
@@ -25,21 +24,18 @@ export default {
   },
   methods: {
     select (list) {
-      if (list === this.currentPage) return
-      if (typeof list === 'string') return
-      this.$emit("changePage", this.childCurrentPage + 1)
+      if(list === this.childCurrentPage) return
+      if(typeof list === "string") return
       this.childCurrentPage = list
-      console.log("点击了")
+      this.$emit("chickPage", this.childCurrentPage)
     },
     setMinCurrentPage () {
-      this.$emit("changePage", this.childCurrentPage)
       this.childCurrentPage = 1
-      console.log("点击了")
+      this.$emit("chickPage", this.childCurrentPage)
     },
     setMaxCurrentPage () {
-      this.$emit("changePage", this.childCurrentPage)
       this.childCurrentPage = this.totalPages
-      console.log("点击了")
+      this.$emit("chickPage", this.childCurrentPage)
     }
   },
   computed: {
@@ -53,7 +49,7 @@ export default {
         return ["...",c - 2, c - 1, c, c + 1, c + 2]
       }else if(c === 66){
         return ["...",c - 2, c - 1, c, c + 1]
-      }else if(c === 67){
+      }else {
         return ["...",c - 2, c - 1, c]
       }
     }
@@ -85,4 +81,7 @@ export default {
       border-bottom-right-radius .08rem
     .pageActive
       color #80bd01
+      cursor not-allowed
+    .disable
+      cursor not-allowed
 </style>
