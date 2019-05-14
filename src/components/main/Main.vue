@@ -2,7 +2,7 @@
   <div class="main-outer">
     <div class="main-inner">
       <post :postList="postList" @clickTab="clickTab">
-        <pagination @chickPage="chickPage"></pagination>
+        <pagination @chickPage="chickPage" ref="select"></pagination>
       </post>
       <sidebar></sidebar>
     </div>
@@ -26,47 +26,44 @@ export default {
   data () {
     return {
       postList: [],
-      currentPage: this.$store.state.params.page,
       params: {}
     }
   },
   methods: {
     //发送get请求
     handlePostAxios () {
-      // changeUrl(this.params)
       this.params = {
         tab: this.$store.state.params.tab,
         page: this.$store.state.params.page
       }
-      console.log(this.params)
+      changeUrl(this.params)
       axios.get("https://cnodejs.org/api/v1/topics",
         {
-          tab: this.$store.state.params.tab,
-          page: this.$store.state.params.page
+          params: this.params
       })
       .then(this.getPostInfo)
-      .catch(this.getError())
+      .catch(this.getError)
     },
     getPostInfo (res) {
       const data = res.data
       if(data.success === true){
         this.postList = res.data.data
       }
-      console.log(this.$store.state.params.tab)
     },
     getError () {
+      // eslint-disable-next-line
       console.log("没有发送请求")
     },
-    chickPage (childCurrentPage) {
-      this.$store.state.params.page = childCurrentPage
+    chickPage (currentPage) {
       /* eslint-disable */
-      this.changePage(childCurrentPage)
+      this.changePage(currentPage)
       this.handlePostAxios()
     },
     clickTab (tab) {
       this.changeTab(tab)
-      this.changePage("")
+      this.changePage(1)
       this.handlePostAxios()
+      this.$refs.select.select(1)
     },
     ...mapActions([
       'changePage',

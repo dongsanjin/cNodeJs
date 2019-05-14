@@ -13,7 +13,6 @@ export default new Vuex.Store({
   mutations: {
     changeTab (state, newTab) {
       state.params.tab = newTab
-
     },
     changePage (state, newPage) {
       state.params.page = newPage

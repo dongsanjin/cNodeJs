@@ -18,8 +18,7 @@ export default {
   name: "Pagination",
   data () {
     return {
-      childCurrentPage: 1,
-      totalPages: 67
+      childCurrentPage: 1
     }
   },
   methods: {
@@ -39,17 +38,46 @@ export default {
     }
   },
   computed: {
+    totalPages () {
+      let tab = this.$store.state.params.tab
+      let num = 0
+      switch (tab) {
+        case 'all': 
+          num = 67
+          break
+        case 'good':
+          num = 18
+          break
+        case 'share':
+          num = 18
+          break
+        case 'ask':
+          num = 18
+          break
+        case 'job':
+          num = 18
+          break
+        case 'dev':
+          num = 18
+          break
+        default:
+          num = 1
+          break
+      }
+      return num
+    },
     pageList () {
       const c = this.childCurrentPage
+      let t = this.totalPages
       if (c < 4) {
         return [1,  2,  3,  4, 5, "..."]
-      }else if(c >= 4 && c < 65) {
+      }else if(c >= 4 && c < t - 2) {
         return ["...",c - 2, c - 1, c, c + 1, c + 2, "..."]
-      }else if(c === 65){
+      }else if(c === (t - 2)){
         return ["...",c - 2, c - 1, c, c + 1, c + 2]
-      }else if(c === 66){
+      }else if(c === (t - 1)){
         return ["...",c - 2, c - 1, c, c + 1]
-      }else {
+      }else{
         return ["...",c - 2, c - 1, c]
       }
     }

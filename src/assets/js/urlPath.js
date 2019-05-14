@@ -2,7 +2,6 @@
 export default function changeUrl ( data ) {
   let url = ''
   url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
-  console.log(url)
   window.history.pushState(null, null, url)
   //同时将返回到页面顶部
   document.documentElement.scrollTop = 0
