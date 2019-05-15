@@ -22,6 +22,7 @@ export default {
     width 100%
     background #444
     .header
+      width 90%
       overflow hidden
       max-width 1400px
       min-width 968px

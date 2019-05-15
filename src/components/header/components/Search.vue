@@ -1,7 +1,7 @@
 <template>
   <div class="header-left">
     <section class="logo">
-      <img class="logo-img" src="https://static2.cnodejs.org/public/images/cnodejs_light.svg">
+      <a href="/"><img class="logo-img" src="https://static2.cnodejs.org/public/images/cnodejs_light.svg">></a>
     </section>
     <form action="#" id="search-form">
       <input type="text" class="search">

@@ -1,21 +1,19 @@
 <template>
   <div class="wrapper">
-    <div class="post-nav">
-      <span class="post-nav-item" :class="{postNavItemActive: list === currentTab, hover: list !== currentTab}" v-for="(list, index) in tabList" :key="index" @click="select(list)">{{list}}</span>
+    <div class="topic-nav">
+      <span class="topic-nav-item" :class="{TopicNavItemActive: list === currentTab, hover: list !== currentTab, TopicNavItemNotActive: list !== currentTab}" v-for="(list, index) in tabList" :key="index" @click="select(list)">{{list}}</span>
     </div>
-    <ul class="post-all">
-      <li class="post-item" v-for="(list, index) of postList" :key="index">
-        <a href="#" class="user-avatar-box"><img class="user-avatar" :src="list.author.avatar_url"></a>
-        <div class="post-statistics">
+    <ul class="topic-all">
+      <li class="topic-item" v-for="(list, index) of topicList" :key="index">
+        <a :href="'https://cnodejs.org/user' + '/' + list.author.loginname" class="user-avatar-box"><img class="user-avatar" :src="list.author.avatar_url"></a>
+        <div class="topic-statistics">
           <span class="reply-num">{{list.reply_count}}</span><span class="spacing">/</span><span class="watch-num">{{list.visit_count}}</span>
         </div>
-        <div class="post-info">
-          <span class="post-type" :class="{postTop: list.top || list.good === true}" v-if="currentTabStr == 'all' || list.good == true ? true : list. top || list.good ? true : false">{{list.top == true ? "置顶" : list.good == true ? "精华" : list.tab == "share" ? "分享" : "问答"}}</span>
-          <!-- <span class="post-type" :class="{postTop: list.top || list.good === true}" v-else-if="list.tab === 'all' || list.good : true ? true : list.top || list.good ? true : false">{{list.top == true ? "置顶" : list.good == true ? "精华" : list.tab == "share" ? "分享" : "问答"}}</span> -->
-          <a href="#" class="post-title">{{list.title}}</a>
+        <div class="topic-info">
+          <span class="topic-type" :class="{TopicTop: list.top || list.good === true}" v-if="currentTabStr == 'all' || list.good == true ? true : list. top || list.good ? true : false">{{list.top == true ? "置顶" : list.good == true ? "精华" : list.tab == "share" ? "分享" : "问答"}}</span>
+          <router-link :to="'/' + list.id" class="topic-title">{{list.title}}</router-link>
         </div>
         <a href="#" class="reply-user">
-          <!-- <img class="reply-user-avatar" src="https://avatars3.githubusercontent.com/u/25699654?v=4&s=120"> -->
           <span class="comment-time">{{list.last_reply_at}}</span>
         </a>
       </li>
@@ -24,11 +22,10 @@
   </div>
 </template>
 <script>
-
 export default {
-  name: "Post",
+  name: "Topic",
   props: {
-    postList: Array
+    topicList: Array
   },
   data () {
     return {
@@ -73,12 +70,12 @@ export default {
   background-color #fff
   overflow hidden
   flex 1
-  .post-nav
+  .topic-nav
     height .88rem
     background-color #f6f6f6
     font-size .28rem
     padding-left .2rem
-    .post-nav-item
+    .topic-nav-item
       float left
       margin .2rem
       padding .1rem
@@ -86,16 +83,18 @@ export default {
       border-radius .06rem
       color #80bd01
       cursor pointer
+      &:hover
+        color #005580
       &:active
         text-decoration: underline
-    .hover
-      color #000
-    .postNavItemActive
+    .TopicNavItemNotActive
+      color #80bd01
+    .TopicNavItemActive
       background-color #80bd01
       color #fff
-  .post-all
+  .topic-all
     overflow hidden
-    .post-item
+    .topic-item
       display flex
       overflow hidden
       height 1rem
@@ -111,9 +110,9 @@ export default {
         display inline-block
         width .6rem
         vertical-align middle
-      .post-statistics
+      .topic-statistics
         display inline-block
-      .post-statistics
+      .topic-statistics
         width 1.6rem
         text-align center
         .reply-num
@@ -123,12 +122,12 @@ export default {
           font-size .26rem
         .spacing
           margin 0 .04rem
-      .post-info
+      .topic-info
         flex 1
         overflow hidden
         text-overflow ellipsis
         white-space nowrap
-        .post-type
+        .topic-type
           padding 0.04rem 0.08rem
           margin-right .1rem
           border-radius .06rem
@@ -136,13 +135,14 @@ export default {
           text-align center
           color #999
           background-color #e5e5e5
-        .postTop
+        .TopicTop
           color #fff
           background-color #80bd01
-        .post-title
+        .topic-title
           color #000
       .reply-user
         float right
+        width 1.4rem
         .reply-user-avatar
           width .36rem
           border-radius .06rem

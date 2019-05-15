@@ -8,7 +8,9 @@ export default new Vuex.Store({
     params: {
       tab: 'all',
       page: 1
-    }
+    },
+    topic: {},
+    topicId: ''
   },
   mutations: {
     changeTab (state, newTab) {
@@ -17,6 +19,12 @@ export default new Vuex.Store({
     changePage (state, newPage) {
       state.params.page = newPage
     },
+    setTopicId (state, newId) {
+      state.topicId = newId
+    },
+    setTopic (state, newTopic) {
+      state.topic = newTopic
+    }
   },
   actions: {
     changeTab ({ commit }, newTab) {
@@ -25,5 +33,11 @@ export default new Vuex.Store({
     changePage ({ commit }, newPage) {
       commit("changePage", newPage)
     },
+    setTopicId ({ commit }, newId) {
+      commit("setTopicId", newId)
+    },
+    setTopic ({commit}, newTopic) {
+      commit("setTopic", newTopic)
+    }
   }
 })

@@ -71,10 +71,6 @@ export default {
 </script>
 <style lang="stylus" scoped>
   .wrapper
-    width 5.8rem
-    float right
-    margin-left .3rem
-    font-size .28rem
     .side
       margin-bottom .2rem
       padding .2rem
