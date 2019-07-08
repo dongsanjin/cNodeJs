@@ -84,7 +84,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import '~assets/css/fn.styl'
 .wrapper
   .topic-detail
     background-color #fff
