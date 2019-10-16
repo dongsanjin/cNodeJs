@@ -1,4 +1,7 @@
 module.exports = {
+  publicPath: './',
+  outputDir: "dist",
+  assetsDir: "static",
   configureWebpack: {
     resolve: {
       alias: {
@@ -11,6 +14,5 @@ module.exports = {
   },
   devServer: {
     open: true
-  },
-  publicPath: process.env.NODE_ENV === 'production'? '/cNodeJs': '/'
+  }
 }
